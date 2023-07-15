@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Logger</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+
+      #root {
+        display: flex;
+        height: 100vh;
+        justify-content: center;
+        align-items: center;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root">
+      <h1 id="title">Logger</h1>
+    </div>
+    <script src="./index.js"></script>
+    <script>
+      (function () {
+        Logger.setOptions({ level: 'WARN' });
+
+        Logger.d('1234132');
+        Logger.v('1234132');
+        Logger.i('1234132');
+        Logger.w('1234132');
+        Logger.e('1234132');
+
+        Logger.setOptions({ hideTag: true });
+
+        Logger.d('1234132');
+        Logger.v('1234132');
+        Logger.i('1234132');
+        Logger.w('1234132');
+        Logger.e('1234132');
+      })();
+    </script>
+  </body>
+</html>
