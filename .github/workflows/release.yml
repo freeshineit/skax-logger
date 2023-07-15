@@ -39,7 +39,7 @@ jobs:
 
       # 发布npm
       - name: Publish npm
-        run: cd dist && npm publish
+        run: cd dist && npm publish --access public
         env:
           # 这里需要几个 Token 变量
           # NPM_TOKEN 需要在 npm 网站生成。
