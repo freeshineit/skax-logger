@@ -18,7 +18,7 @@ function generatePackageJSON() {
         delete parsed.jest;
 
         //
-        const distKeys = ['main', 'types'];
+        const distKeys = ['main', 'types', 'umd'];
         for (const key of distKeys) {
           if (parsed[key]) {
             parsed[key] = parsed[key].replace(/\.\/dist\/|dist\//, '');
