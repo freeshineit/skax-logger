@@ -1,4 +1,4 @@
-import Logger from '../src';
+import Logger, { type LoggerLevel } from '../src';
 
 const VERBOSE = ['LOGGER VERBOSE', 'verbose message'];
 const WARN = ['LOGGER WARN', 'warn message', 'background: #faad14; color: #fff'];
@@ -39,32 +39,24 @@ describe('Logger test', () => {
    * Logger test set level options
    */
   describe('Logger test', () => {
-    it('Logger set options', () => {
-      Logger.setOptions({
-        level: 'INFO',
-      });
+    it('Logger debug: set level', () => {
+      testLoggerLevel('debug', DEBUG);
     });
 
-    it('Logger warn', () => {
-      testFn('warn', WARN);
+    it('Logger verbose: set level', () => {
+      testLoggerLevel('log', VERBOSE);
     });
 
-    it('Logger error', () => {
-      testFn('error', ERROR);
+    it('Logger info: set level', () => {
+      testLoggerLevel('info', INFO);
     });
 
-    // it('Logger debug', () => {
-    //   testFn('debug', DEBUG);
-    // });
-
-    it('Logger info', () => {
-      testFn('info', INFO);
+    it('Logger warn: set level', () => {
+      testLoggerLevel('warn', WARN);
     });
 
-    it('Logger set options', () => {
-      Logger.setOptions({
-        level: 'DEBUG',
-      });
+    it('Logger error: set level', () => {
+      testLoggerLevel('error', ERROR);
     });
   });
 
@@ -72,23 +64,19 @@ describe('Logger test', () => {
    * Logger test set hide tag options
    */
   describe('Logger test', () => {
-    it('Logger verbose', () => {
+    it('Logger verbose: hide tag', () => {
       testHideTagFn('log', VERBOSE);
     });
-
-    it('Logger warn', () => {
+    it('Logger warn: hide tag', () => {
       testHideTagFn('warn', WARN);
     });
-
-    it('Logger error', () => {
+    it('Logger error: hide tag', () => {
       testHideTagFn('error', ERROR);
     });
-
-    // it('Logger debug', () => {
-    //   testHideTagFn('debug', DEBUG);
-    // });
-
-    it('Logger info', () => {
+    it('Logger debug: hide tag', () => {
+      testHideTagFn('debug', DEBUG);
+    });
+    it('Logger info: hide tag', () => {
       testHideTagFn('info', INFO);
     });
   });
@@ -122,7 +110,7 @@ function testFn(type: string, arrStr: string[]) {
 }
 
 /**
- *
+ * test logger hidden tag option
  * @param type console type
  * @param arrStr string array
  */
@@ -131,19 +119,55 @@ function testHideTagFn(type: string, arrStr: string[]) {
     hideTag: true,
   });
 
-  type = type === 'debug' ? 'log' : type;
-  const original = (global.console as any)[type];
-  (global.console as any)[type] = jest.fn();
+  const type1 = type === 'debug' ? 'log' : type;
+
+  const original = (global.console as any)[type1];
+  (global.console as any)[type1] = jest.fn();
 
   const loggerLevel = switchLoggerType(type);
   if (loggerLevel === '') return;
   (Logger as any)[loggerLevel](arrStr[1]);
-  expect((global.console as any)[type]).toHaveBeenCalledWith(arrStr[1]);
+  expect((global.console as any)[type1]).toHaveBeenCalledWith(arrStr[1]);
 
   // 恢复原 console 函数引用
-  (global.console as any)[type] = original;
+  (global.console as any)[type1] = original;
   Logger.setOptions({
     hideTag: false,
+  });
+}
+
+/**
+ * test logger level option
+ * @param type console type
+ * @param arrStr string array
+ */
+function testLoggerLevel(type: string, arrStr: string[]) {
+  const loggerLevel = switchLoggerType(type);
+  const loggerLevel2 = switchLoggerType2(type);
+  const type1 = type === 'debug' ? 'log' : type;
+
+  Logger.setOptions({
+    level: loggerLevel2,
+  });
+
+  const original = (global.console as any)[type1];
+  (global.console as any)[type1] = jest.fn();
+
+  if (loggerLevel === '') return;
+  (Logger as any)[loggerLevel](arrStr[1]);
+
+  arrStr[2]
+    ? expect((global.console as any)[type1]).toHaveBeenCalledWith(
+        `%c[${arrStr[0]}]`,
+        arrStr[2],
+        arrStr[1],
+      )
+    : expect((global.console as any)[type1]).toHaveBeenCalledWith(`[${arrStr[0]}]`, arrStr[1]);
+
+  // 恢复原 console 函数引用
+  (global.console as any)[type1] = original;
+  Logger.setOptions({
+    level: 'DEBUG',
   });
 }
 
@@ -161,4 +185,20 @@ function switchLoggerType(type: string) {
       return 'e';
   }
   return '';
+}
+
+function switchLoggerType2(type: string): LoggerLevel {
+  switch (type) {
+    case 'log':
+      return 'VERBOSE';
+    case 'info':
+      return 'INFO';
+    case 'warn':
+      return 'WARN';
+    case 'debug':
+      return 'DEBUG';
+    case 'error':
+      return 'ERROR';
+  }
+  return '' as LoggerLevel;
 }
