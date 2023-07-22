@@ -10,13 +10,15 @@ export interface LoggerOptions {
 }
 
 /**
- * @class Logger class
- * @classdesc Provide multiple log printing methods
+ * @class Logger
+ * @classdesc Provide multiple log printing static methods
+ * @example
+ * Logger.v("verbose log")
  */
 class Logger {
   private static readonly TAG = 'LOGGER';
 
-  // log level default 0,
+  /** log level default 0 */
   private static LOGGER_LEVEL: number = 0;
   private static HIDE_TAG: boolean = false;
 
