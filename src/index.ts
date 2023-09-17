@@ -5,8 +5,6 @@ export type LoggerLevel = 'DEBUG' | 'VERBOSE' | 'INFO' | 'WARN' | 'ERROR';
 export interface LoggerOptions {
   /** logger level */
   level?: LoggerLevel;
-  /** hidden tag prefix */
-  hideTag?: boolean;
 }
 
 /**
@@ -16,96 +14,72 @@ export interface LoggerOptions {
  * Logger.v("verbose log")
  */
 class Logger {
-  private static readonly TAG = 'LOGGER';
+  // private static readonly TAG = 'LOGGER';
 
   /** log level default 0 */
   private static LOGGER_LEVEL: number = 0;
-  private static HIDE_TAG: boolean = false;
+
+  private static readonly noop = () => {};
 
   /**
    * @description Static method used to print error logs
    * @static
    *
    * @example
-   * Logger.e("error message") // [LOGGER ERROR] > error message
+   * Logger.e("error message") // error message
    *
    * @param {...any[]} args error messages
    * @returns {void}
    */
-  static e(...args: any[]) {
-    if (Logger.LOGGER_LEVEL <= 4)
-      Logger.HIDE_TAG
-        ? console.error(...args)
-        : console.error(`%c[${Logger.TAG} ERROR]`, 'background: red; color: #fff', ...args);
-  }
+  static e = Logger.loggerFactory('error', Logger.LOGGER_LEVEL <= 4);
 
   /**
    * @description Static method used to print warn logs
    * @static
    *
    * @example
-   * Logger.w("warn message") // [LOGGER WARN] > warn message
+   * Logger.w("warn message") // warn message
    *
    * @param {...any[]} args warn messages
    * @returns {void}
    */
-  static w(...args: any[]) {
-    if (Logger.LOGGER_LEVEL <= 3)
-      Logger.HIDE_TAG
-        ? console.warn(...args)
-        : console.warn(`%c[${Logger.TAG} WARN]`, 'background: #faad14; color: #fff', ...args);
-  }
+  static w = Logger.loggerFactory('warn', Logger.LOGGER_LEVEL <= 3);
 
   /**
    * @description Static method used to print info logs
    * @static
    *
    * @example
-   * Logger.i("info message") // [LOGGER INFO] > info message
+   * Logger.i("info message") // info message
    *
    * @param {...any[]} args info messages
    * @returns {void}
    */
-  static i(...args: any[]) {
-    if (Logger.LOGGER_LEVEL <= 2)
-      Logger.HIDE_TAG
-        ? console.info(...args)
-        : console.info(`%c[${Logger.TAG} INFO]`, 'background: #ffe58f; color: #fff', ...args);
-  }
+  static i = Logger.loggerFactory('info', Logger.LOGGER_LEVEL <= 2);
 
   /**
    * @description Static method used to print verbose logs
    * @static
    *
    * @example
-   * Logger.v("verbose message") // [LOGGER VERBOSE] > verbose message
+   * Logger.v("verbose message") // verbose message
    *
    * @param {...any[]} args verbose messages
    * @returns {void}
    */
-  static v(...args: any[]) {
-    if (Logger.LOGGER_LEVEL <= 1)
-      Logger.HIDE_TAG ? console.log(...args) : console.log(`[${Logger.TAG} VERBOSE]`, ...args);
-  }
+  static v = Logger.loggerFactory('log', Logger.LOGGER_LEVEL <= 1);
 
   /**
    * @description Static method used to print debug logs
    * @static
    *
    * @example
-   * Logger.d("debug message") // [LOGGER DEBUG] > debug message
-   * Logger.d("debug message", "DEBUG") // [DEBUG] > debug message
+   * Logger.d("debug message") // debug message
    *
    * @param {...any[]} msg debug messages
    * @returns {void}
    */
-  static d(...args: any[]) {
-    if (Logger.LOGGER_LEVEL < 1) {
-      Logger.HIDE_TAG
-        ? console.log(...args)
-        : console.log(`%c[${Logger.TAG} DEBUG]`, 'background: #1677ff; color: #fff', ...args);
-    }
-  }
+  static d = Logger.loggerFactory('debug', Logger.LOGGER_LEVEL < 1);
 
   /**
    * @description Static method used to set logger option
@@ -119,7 +93,14 @@ class Logger {
    */
   static setOptions(options: LoggerOptions) {
     Logger.LOGGER_LEVEL = Logger._matchLevel(options.level);
-    Logger.HIDE_TAG = !!options.hideTag;
+
+    if (Logger.LOGGER_LEVEL !== 0) {
+      Logger.e = Logger.loggerFactory('error', Logger.LOGGER_LEVEL <= 4);
+      Logger.w = Logger.loggerFactory('warn', Logger.LOGGER_LEVEL <= 3);
+      Logger.i = Logger.loggerFactory('info', Logger.LOGGER_LEVEL <= 2);
+      Logger.v = Logger.loggerFactory('warn', Logger.LOGGER_LEVEL <= 1);
+      Logger.d = Logger.loggerFactory('warn', Logger.LOGGER_LEVEL < 1);
+    }
   }
 
   /**
@@ -154,6 +135,15 @@ class Logger {
     }
 
     return logLevel;
+  }
+
+  static loggerFactory(type: string, bool: boolean) {
+    const func = (console as any)[type];
+
+    if (bool && func) {
+      return func.bind(console, `[${type.toLocaleUpperCase()}]`);
+    }
+    return Logger.noop;
   }
 }
 
