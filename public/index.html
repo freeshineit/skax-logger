@@ -24,24 +24,26 @@
     <div id="root">
       <h1 id="title">Logger</h1>
     </div>
-    <script src="./index.js"></script>
+    <script src="./index.umd.js"></script>
     <script>
       (function () {
-        Logger.setOptions({ level: 'WARN' });
+        const logger = new Logger();
 
-        Logger.d('1234132');
-        Logger.v('1234132');
-        Logger.i('1234132');
-        Logger.w('1234132');
-        Logger.e('1234132');
+        logger.v(logger.version());
 
-        Logger.setOptions({ hideTag: true });
+        logger.d('1234132');
+        logger.v('1234132');
+        logger.i('1234132');
+        logger.w('1234132');
+        logger.e('1234132');
 
-        Logger.d('1234132');
-        Logger.v('1234132');
-        Logger.i('1234132');
-        Logger.w('1234132');
-        Logger.e('1234132');
+        logger.setOptions({ level: 'WARN' });
+
+        logger.d('2-1234132');
+        logger.v('2-1234132');
+        logger.i('2-1234132');
+        logger.w('2-1234132');
+        logger.e('2-1234132');
       })();
     </script>
   </body>

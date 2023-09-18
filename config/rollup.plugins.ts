@@ -12,6 +12,8 @@ import eslint from '@rollup/plugin-eslint';
 
 // node >= 10.16.0
 import filesize from 'rollup-plugin-filesize';
+import replace from '@rollup/plugin-replace';
+import pkg from '../package.json';
 
 import isDev from './isDev';
 
@@ -30,6 +32,9 @@ export default [
   }),
   buble({
     include: ['**/src/**'],
+  }),
+  replace({
+    __VERSION__: pkg.version,
   }),
   resolve(),
   commonjs({ extensions: ['.js', '.ts'] }),

@@ -78,6 +78,7 @@
     "@rollup/plugin-commonjs": "^25.0.2",
     "@rollup/plugin-eslint": "^9.0.4",
     "@rollup/plugin-node-resolve": "^15.1.0",
+    "@rollup/plugin-replace": "^5.0.2",
     "@rollup/plugin-strip": "^3.0.2",
     "@rollup/plugin-typescript": "^11.1.1",
     "@skax/camel": "^0.2.5",
@@ -100,14 +101,14 @@
     "rollup-plugin-filesize": "^10.0.0",
     "rollup-plugin-serve": "^2.0.2",
     "through2": "^4.0.2",
-    "ts-jest": "^29.1.0",
+    "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
-    "tslib": "^2.6.0",
-    "typedoc": "^0.24.8",
-    "typescript": "^5.1.6"
+    "tslib": "^2.6.2",
+    "typedoc": "^0.25.1",
+    "typescript": "5.2.2"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=16"
   },
   "files": [
     "dist"

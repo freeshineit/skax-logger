@@ -9,112 +9,116 @@ export interface LoggerOptions {
 
 /**
  * @class Logger
- * @classdesc Provide multiple log printing static methods
+ * @classdesc Provide multiple log printing methods
  * @example
- * Logger.v("verbose log")
+ * const logger = new Logger({})
+ * logger.v("verbose log")
  */
 class Logger {
-  // private static readonly TAG = 'LOGGER';
-
-  /** log level default 0 */
-  private static LOGGER_LEVEL: number = 0;
-
   private static readonly noop = () => {};
+  private _options: Partial<LoggerOptions> = {};
+  private _levelNum: number = 0;
+
+  constructor(options: LoggerOptions = {}) {
+    this.setOptions(options);
+  }
 
   /**
-   * @description Static method used to print error logs
+   * @description  Method used to print error logs
    * @static
    *
    * @example
-   * Logger.e("error message") // error message
+   * logger.e("error message") // error message
    *
    * @param {...any[]} args error messages
    * @returns {void}
    */
-  static e = Logger.loggerFactory('error', Logger.LOGGER_LEVEL <= 4);
+
+  public e = this._loggerFactory('error', this._levelNum <= 4);
 
   /**
-   * @description Static method used to print warn logs
+   * @description Method used to print warn logs
    * @static
    *
    * @example
-   * Logger.w("warn message") // warn message
+   * logger.w("warn message") // warn message
    *
    * @param {...any[]} args warn messages
    * @returns {void}
    */
-  static w = Logger.loggerFactory('warn', Logger.LOGGER_LEVEL <= 3);
+  w = this._loggerFactory('warn', this._levelNum <= 3);
 
   /**
-   * @description Static method used to print info logs
+   * @description Method used to print info logs
    * @static
    *
    * @example
-   * Logger.i("info message") // info message
+   * logger.i("info message") // info message
    *
    * @param {...any[]} args info messages
    * @returns {void}
    */
-  static i = Logger.loggerFactory('info', Logger.LOGGER_LEVEL <= 2);
+  i = this._loggerFactory('info', this._levelNum <= 2);
 
   /**
-   * @description Static method used to print verbose logs
+   * @description Method used to print verbose logs
    * @static
    *
    * @example
-   * Logger.v("verbose message") // verbose message
+   * logger.v("verbose message") // verbose message
    *
    * @param {...any[]} args verbose messages
    * @returns {void}
    */
-  static v = Logger.loggerFactory('log', Logger.LOGGER_LEVEL <= 1);
+  v = this._loggerFactory('log', this._levelNum <= 1);
 
   /**
-   * @description Static method used to print debug logs
+   * @description Method used to print debug logs
    * @static
    *
    * @example
-   * Logger.d("debug message") // debug message
+   * logger.d("debug message") // debug message
    *
    * @param {...any[]} msg debug messages
    * @returns {void}
    */
-  static d = Logger.loggerFactory('debug', Logger.LOGGER_LEVEL < 1);
+  d = this._loggerFactory('debug', this._levelNum < 1);
 
   /**
-   * @description Static method used to set logger option
+   * @description  Method used to set logger option and change logger level
    * @static
    *
    * @example
-   * Logger.setOptions({level: 'INFO'}) // set logger level
+   * logger.setOptions({level: 'INFO'}) // set logger level
    *
    * @param {LoggerOptions} options logger options
    * @return {void}
    */
-  static setOptions(options: LoggerOptions) {
-    Logger.LOGGER_LEVEL = Logger._matchLevel(options.level);
+  setOptions(options: Partial<LoggerOptions>) {
+    this._options = options;
+    this._levelNum = this._matchLevel(options.level || 'DEBUG');
 
-    if (Logger.LOGGER_LEVEL !== 0) {
-      Logger.e = Logger.loggerFactory('error', Logger.LOGGER_LEVEL <= 4);
-      Logger.w = Logger.loggerFactory('warn', Logger.LOGGER_LEVEL <= 3);
-      Logger.i = Logger.loggerFactory('info', Logger.LOGGER_LEVEL <= 2);
-      Logger.v = Logger.loggerFactory('warn', Logger.LOGGER_LEVEL <= 1);
-      Logger.d = Logger.loggerFactory('warn', Logger.LOGGER_LEVEL < 1);
+    if (this._levelNum !== 0) {
+      this.e = this._loggerFactory('error', this._levelNum <= 4);
+      this.w = this._loggerFactory('warn', this._levelNum <= 3);
+      this.i = this._loggerFactory('info', this._levelNum <= 2);
+      this.v = this._loggerFactory('warn', this._levelNum <= 1);
+      this.d = this._loggerFactory('warn', this._levelNum < 1);
     }
   }
 
   /**
-   * @description Static method used to match logger level
+   * @description Private method used to match logger level
    * @static
    * @private
    *
    * @example
-   * Logger._matchLevel("DEBUG") // 0
+   * this._matchLevel("DEBUG") // 0
    *
    * @param {LoggerLevel} level logger level
    * @return {number}
    */
-  private static _matchLevel(level?: LoggerLevel) {
+  private _matchLevel(level?: LoggerLevel) {
     let logLevel = 0;
     switch (level) {
       case 'DEBUG':
@@ -137,13 +141,36 @@ class Logger {
     return logLevel;
   }
 
-  static loggerFactory(type: string, bool: boolean) {
+  /**
+   * @private
+   * @description Logger factory
+   * @param type
+   * @param bool
+   * @returns
+   */
+  private _loggerFactory(type: string, bool: boolean) {
     const func = (console as any)[type];
 
     if (bool && func) {
       return func.bind(console, `[${type.toLocaleUpperCase()}]`);
     }
     return Logger.noop;
+  }
+
+  /**
+   * @description Get options
+   * @returns {LoggerOptions}
+   */
+  getOptions() {
+    return this._options;
+  }
+
+  /**
+   * @description Get version
+   * @returns {string}
+   */
+  version() {
+    return '__VERSION__';
   }
 }
 
