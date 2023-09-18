@@ -11,5 +11,7 @@ yarn add @skax/logger
 ```ts
 import Logger from '@skax/logger';
 
-Logger.v('console.log print');
+const logger = new Logger();
+
+logger.v('console.log print');
 ```
