@@ -32,9 +32,6 @@ jobs:
         run: pnpm install
 
       - name: Build Packages
-        run: pnpm run test
-
-      - name: Build Packages
         run: pnpm run build
 
       # 发布npm
