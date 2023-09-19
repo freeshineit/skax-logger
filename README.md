@@ -13,5 +13,9 @@ import Logger from '@skax/logger';
 
 const logger = new Logger();
 
-logger.v('console.log print');
+logger.d('console.log print'); // debug
+logger.v('console.log print'); // log
+logger.i('console.log print'); // info
+logger.w('console.log print'); // warn
+logger.e('console.log print'); // error
 ```

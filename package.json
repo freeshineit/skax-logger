@@ -1,6 +1,6 @@
 {
   "name": "@skax/logger",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "console logger",
   "main": "dist/index.js",
   "umd": "dist/index.umd.js",
@@ -13,8 +13,6 @@
     "analyzer": "cross-env ANALYZER=true npm run build",
     "lint": "eslint src --fix --ext .ts,.tsx,.js,.jsx",
     "fmt": "prettier --write \"{src,__tests__,config}/**/*.{ts,tsx,js,jsx}\"",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
     "clean": "rimraf docs dist coverage",
     "prepare": "husky install",
     "preinstall": "npx only-allow pnpm",
