@@ -25,7 +25,7 @@ class Logger {
 
   /**
    * @description  Method used to print error logs
-   * @static
+   * @method
    *
    * @example
    * logger.e("error message") // error message
@@ -38,7 +38,7 @@ class Logger {
 
   /**
    * @description Method used to print warn logs
-   * @static
+   * @method
    *
    * @example
    * logger.w("warn message") // warn message
@@ -50,7 +50,7 @@ class Logger {
 
   /**
    * @description Method used to print info logs
-   * @static
+   * @method
    *
    * @example
    * logger.i("info message") // info message
@@ -62,7 +62,7 @@ class Logger {
 
   /**
    * @description Method used to print verbose logs
-   * @static
+   * @method
    *
    * @example
    * logger.v("verbose message") // verbose message
@@ -74,7 +74,7 @@ class Logger {
 
   /**
    * @description Method used to print debug logs
-   * @static
+   * @method
    *
    * @example
    * logger.d("debug message") // debug message
@@ -86,7 +86,6 @@ class Logger {
 
   /**
    * @description  Method used to set logger option and change logger level
-   * @static
    *
    * @example
    * logger.setOptions({level: 'INFO'}) // set logger level
@@ -109,7 +108,6 @@ class Logger {
 
   /**
    * @description Private method used to match logger level
-   * @static
    * @private
    *
    * @example
@@ -148,7 +146,7 @@ class Logger {
    * @param bool
    * @returns
    */
-  private _loggerFactory(type: string, bool: boolean) {
+  private _loggerFactory(type: keyof Console, bool: boolean) {
     const func = (console as any)[type];
 
     if (bool && func) {
