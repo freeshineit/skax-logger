@@ -7,6 +7,8 @@ export interface LoggerOptions {
   level?: LoggerLevel;
 }
 
+type LoggerFunc = (...data: any[]) => void;
+
 /**
  * @class Logger
  * @classdesc Provide multiple log printing methods
@@ -146,8 +148,8 @@ class Logger {
    * @param bool
    * @returns
    */
-  private _loggerFactory(type: keyof Console, bool: boolean) {
-    const func = (console as any)[type];
+  private _loggerFactory(type: keyof Console, bool: boolean): LoggerFunc {
+    const func = console[type];
 
     if (bool && func) {
       return func.bind(console, `[${type.toLocaleUpperCase()}]`);
