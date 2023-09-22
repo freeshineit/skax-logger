@@ -7,6 +7,8 @@ export interface LoggerOptions {
   level?: LoggerLevel;
 }
 
+type ConsoleKey = keyof Console;
+
 type LoggerFunc = (...data: any[]) => void;
 
 /**
@@ -35,7 +37,6 @@ class Logger {
    * @param {...any[]} args error messages
    * @returns {void}
    */
-
   public e = this._loggerFactory('error', this._levelNum <= 4);
 
   /**
@@ -144,11 +145,11 @@ class Logger {
   /**
    * @private
    * @description Logger factory
-   * @param type
-   * @param bool
+   * @param {ConsoleKey} type
+   * @param {boolean} bool
    * @returns
    */
-  private _loggerFactory(type: keyof Console, bool: boolean): LoggerFunc {
+  private _loggerFactory(type: ConsoleKey, bool: boolean): LoggerFunc {
     const func = console[type];
 
     if (bool && func) {
