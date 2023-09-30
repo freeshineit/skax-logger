@@ -9,7 +9,7 @@ export interface LoggerOptions {
 
 type ConsoleKey = keyof Console;
 
-type LoggerFunc = (...data: any[]) => void;
+export type LoggerFunc = (...data: any[]) => void;
 
 /**
  * @class Logger
@@ -104,7 +104,7 @@ class Logger {
       this.e = this._loggerFactory('error', this._levelNum <= 4);
       this.w = this._loggerFactory('warn', this._levelNum <= 3);
       this.i = this._loggerFactory('info', this._levelNum <= 2);
-      this.v = this._loggerFactory('warn', this._levelNum <= 1);
+      this.v = this._loggerFactory('log', this._levelNum <= 1);
       this.d = this._loggerFactory('warn', this._levelNum < 1);
     }
   }

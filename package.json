@@ -1,6 +1,6 @@
 {
   "name": "@skax/logger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "console logger",
   "main": "dist/index.js",
   "umd": "dist/index.umd.js",
